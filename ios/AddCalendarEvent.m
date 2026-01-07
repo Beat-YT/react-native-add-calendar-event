@@ -203,10 +203,14 @@ RCT_EXPORT_METHOD(presentEventEditingDialog:(NSDictionary *)options resolver:(RC
                  [weakSelf resolveWithAction:CANCELED];
              } else if (action == EKEventEditViewActionSaved) {
                  EKEvent *evt = controller.event;
+
+                 id eventID = evt.eventIdentifier ?: (id)[NSNull null];
+                 id calendarItemID = evt.calendarItemIdentifier ?: (id)[NSNull null];
+
                  NSDictionary *params = @{
-                                          @"eventIdentifier":evt.eventIdentifier,
-                                          @"calendarItemIdentifier":evt.calendarItemIdentifier,
-                                          };
+                    @"eventIdentifier":eventID,
+                    @"calendarItemIdentifier":calendarItemID,
+                 };
                  [weakSelf resolveWithAction:SAVED andParams:params];
              } else if (action == EKEventEditViewActionDeleted) {
                  [weakSelf resolveWithAction:DELETED];
