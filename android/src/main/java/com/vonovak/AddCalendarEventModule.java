@@ -84,8 +84,6 @@ public class AddCalendarEventModule extends ReactContextBaseJavaModule implement
 
     private void presentEventAddingActivity(ReadableMap config) {
         try {
-            setPriorEventId(getCurrentActivity());
-
             final Intent calendarIntent = new Intent(Intent.ACTION_INSERT);
             calendarIntent
                     .setType("vnd.android.cursor.item/event")
@@ -173,7 +171,10 @@ public class AddCalendarEventModule extends ReactContextBaseJavaModule implement
         if ((requestCode != ADD_EVENT_REQUEST_CODE && requestCode != SHOW_EVENT_REQUEST_CODE) || promise == null) {
             return;
         }
-        setPostEventId(activity);
+        // Never read the calendar back: that ran on a CursorLoader background thread
+        // and a SecurityException there crashed the app uncatchably.
+        promise.resolve(Arguments.createMap());
+        resetMembers();
     }
 
     private void setPostEventId(Activity activity) {
